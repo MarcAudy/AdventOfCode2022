@@ -7,48 +7,26 @@ const grid = lines.map(line => new Array(...line).map(ch => parseInt(ch)))
 const rows = grid.length;
 const cols = grid[0].length;
 
-let maxScenicScore = 0
+const scenicScores = grid.map((gridRow, row) => 
+    gridRow.map((height, col) => {
 
-for (let row = 1; row < rows-1; ++row)
-{
-    for (let col = 1; col < cols-1; ++col)
-    {
-        const curHeight = grid[row][col]
+        if (row == 0 || col == 0 || row == rows - 1 || col == cols - 1) { return -1 }
 
-        let leftScore = 0
-        for (let left = col-1; left >= 0; --left) {
-            ++leftScore
-            if (grid[row][left] >= curHeight) {
-                break
-            }
-        }
+        const leftBlockingIndex = gridRow.slice(0,col).reverse().findIndex(val => val >= height)
+        const leftScore = (leftBlockingIndex == -1 ? col : leftBlockingIndex + 1)
+        
+        const rightBlockingIndex = gridRow.slice(col+1).findIndex(val => val >= height)
+        const rightScore = (rightBlockingIndex == -1 ? cols - col - 1 : rightBlockingIndex + 1)
 
-        let rightScore = 0
-        for (let right = col+1; right < cols; ++right) {
-            ++rightScore
-            if (grid[row][right] >= curHeight) {
-                break
-            }
-        }
+        const columnVals = grid.map(gridRow => gridRow[col])
 
-        let upScore = 0
-        for (let up = row-1; up >= 0; --up) {
-            ++upScore
-            if (grid[up][col] >= curHeight) {
-                break
-            }
-        }        
+        const upBlockingIndex = columnVals.slice(0,row).reverse().findIndex(val => val >= height)
+        const upScore = (upBlockingIndex == -1 ? row : upBlockingIndex + 1)
 
-        let downScore = 0
-        for (let down = row+1; down < rows; ++down) {
-            ++downScore
-            if (grid[down][col] >= curHeight) {
-                break
-            }
-        }        
+        const downBlockingIndex = columnVals.slice(row+1).findIndex(val => val >= height)
+        const downScore = (downBlockingIndex == -1 ? rows - row - 1 : downBlockingIndex + 1)
 
-        maxScenicScore = Math.max(maxScenicScore, upScore*downScore*leftScore*rightScore)
-    }
-}
+        return upScore*downScore*leftScore*rightScore
+    }))
 
-console.log(maxScenicScore)
+console.log(Math.max(...scenicScores.map(scores => Math.max(...scores))))
