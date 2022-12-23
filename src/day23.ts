@@ -94,11 +94,12 @@ while (true)
     round++
 
     let elvesToConsider: Point[] = []
-    let stationaryElves: Point[] = []
     let nextMoves: Map<string, Point[]> = new Map()
     
     elves.forEach((exes, y) => exes.forEach(x => {
-        (isElfAdjacent(x,y, AdjacencyMode.All) ? elvesToConsider : stationaryElves).push({x,y})
+        if (isElfAdjacent(x,y, AdjacencyMode.All)) {
+            elvesToConsider.push({x,y})
+        }
     }))
 
     if (elvesToConsider.length == 0) {
