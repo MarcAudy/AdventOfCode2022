@@ -10,14 +10,6 @@ const lines = fs.readFileSync(process.argv[2],'utf8').split('\r\n')
 
 let elves: Map<number, Set<number>> = new Map()
 
-function printElves() {
-    for (let x=-3; x<=10; ++x) {
-        for (let y=-2; y<=9; ++y) {
-
-        }
-    }
-}
-
 function addElf(x,y) {
     let elvesAtY = elves.get(y)
     if (elvesAtY) {
